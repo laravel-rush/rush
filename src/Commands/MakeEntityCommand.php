@@ -4,6 +4,9 @@ namespace LaravelRush\Rush\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Str;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class MakeEntityCommand extends Command
 {
@@ -17,11 +20,9 @@ class MakeEntityCommand extends Command
      */
     protected $description = 'Create entity';
 
-    /**
-     * @return array{type: mixed[][]}
-     */
-    public function handle(): array
+    public function handle(): int
     {
+        // TODO if name === ask
         $entity_name = $this->argument('name');
         $properties = [];
 
@@ -31,14 +32,38 @@ class MakeEntityCommand extends Command
             if ($property_name === null) {
                 break;
             }
+            // TODO проверка на существование типа данных
 
             $property_type = $this->ask('Field type (enter ? to see all types)', 'string');
 
-            $properties[] = [$property_name => ['type' => $property_type]];
+            $properties[] = [
+                'name' => $property_name,
+                'type' => $property_type
+            ];
         }
 
         Artisan::call("make:model {$entity_name}");
 
-        return $properties;
+        // Изменить debug на false
+        $loader = new FilesystemLoader(
+            'vendor/laravel-rush/rush/src/templates/migration'
+        );
+        $twig = new Environment($loader, [
+            'debug' => true,
+            'cache' => 'cache/twig',
+            'autoescape' => false, 
+        ]);
+
+        $table_name = Str::snake(Str::plural($entity_name));
+
+        $code = $twig->render('migration.twig', [
+            'table_name' => $table_name,
+            'properties' => $properties
+        ]);
+
+        $filename = date('Y_m_d_His') . '_create_' . $table_name . '_table.php';
+        file_put_contents("database/migrations/{$filename}", $code);
+
+        return 0;
     }
 }
