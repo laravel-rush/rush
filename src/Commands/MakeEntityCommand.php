@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelRush\Rush\Commands;
 
 use Illuminate\Console\Command;
@@ -21,10 +23,12 @@ class MakeEntityCommand extends Command
 
     public function handle(): int
     {
-        // TODO if name === ask
         /** @var string $entity_name */
         $entity_name = $this->argument('name');
         $properties = [];
+
+        /** @var string[] $types */
+        $types = config()->array('_internal.types');
 
         while (true) {
             $property_name = $this->ask('New property name (press <return> to stop adding fields)');
@@ -32,9 +36,18 @@ class MakeEntityCommand extends Command
             if ($property_name === null) {
                 break;
             }
-            // TODO проверка на существование типа данных
 
-            $property_type = $this->ask('Field type (enter ? to see all types)', 'string');
+            do {
+                /** @var string $property_type */
+                $property_type = $this->ask('Field type (enter ? to see all types)', 'string');
+
+                if (! in_array($property_type, $types, true)) {
+                    $this->error("[ERROR] Invalid type \"{$property_type}\". ");
+
+                    $property_type = null;
+                }
+
+            } while (! $property_type);
 
             $properties[] = [
                 'name' => $property_name,
@@ -42,14 +55,11 @@ class MakeEntityCommand extends Command
             ];
         }
 
-        // Artisan::call("make:model {$entity_name}");
-
-        // Изменить debug на false
         $loader = new FilesystemLoader(
             __DIR__.'/../templates/migration'
         );
         $twig = new Environment($loader, [
-            'debug' => true,
+            'debug' => false,
             'cache' => 'cache/twig',
             'autoescape' => false,
         ]);
