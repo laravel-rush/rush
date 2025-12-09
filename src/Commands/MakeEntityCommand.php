@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-class MakeEntityCommand extends Command
+final class MakeEntityCommand extends Command
 {
     /**
      * @var string

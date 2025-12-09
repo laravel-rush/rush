@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests;
 
 use Illuminate\Support\Facades\File;
@@ -8,16 +10,6 @@ use Orchestra\Testbench\TestCase as TestbenchTestCase;
 
 class TestCase extends TestbenchTestCase
 {
-    /**
-     * @return string[]
-     */
-    protected function getPackageProviders($app): array
-    {
-        return [
-            RushServiceProvider::class,
-        ];
-    }
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -30,6 +22,16 @@ class TestCase extends TestbenchTestCase
         parent::tearDown();
 
         $this->clearPaths();
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getPackageProviders($app): array
+    {
+        return [
+            RushServiceProvider::class,
+        ];
     }
 
     private function configurePaths(): void

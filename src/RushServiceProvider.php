@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use LaravelRush\Rush\Commands\MakeEntityCommand;
 
-class RushServiceProvider extends ServiceProvider
+final class RushServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
