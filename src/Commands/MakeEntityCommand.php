@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace LaravelRush\Rush\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Str;
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
+use LaravelRush\Rush\Actions\CreateMigration;
 
 final class MakeEntityCommand extends Command
 {
@@ -21,7 +19,7 @@ final class MakeEntityCommand extends Command
      */
     protected $description = 'Create entity';
 
-    public function handle(): int
+    public function handle(CreateMigration $action): int
     {
         /** @var string $entity_name */
         $entity_name = $this->argument('name');
@@ -55,24 +53,7 @@ final class MakeEntityCommand extends Command
             ];
         }
 
-        $loader = new FilesystemLoader(
-            __DIR__.'/../templates/migration'
-        );
-        $twig = new Environment($loader, [
-            'debug' => false,
-            'cache' => 'cache/twig',
-            'autoescape' => false,
-        ]);
-
-        $table_name = Str::snake(Str::plural($entity_name));
-
-        $code = $twig->render('migration.twig', [
-            'table_name' => $table_name,
-            'properties' => $properties,
-        ]);
-
-        $filename = date('Y_m_d_His').'_create_'.$table_name.'_table.php';
-        file_put_contents(database_path('migrations')."/{$filename}", $code);
+        $action->handle($entity_name, $properties);
 
         return 0;
     }
