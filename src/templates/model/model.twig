@@ -1,0 +1,23 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use Carbon\CarbonInterface;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * @property-read int $id
+ {% for property in properties -%}
+ * @property-read {{ types[property.type] }} ${{ property.name }}
+ {% endfor -%}
+ * @property-read CarbonInterface $created_at
+ * @property-read CarbonInterface $updated_at
+ */
+class {{ entity_name }} extends Model
+{
+    /** @use HasFactory<\Database\Factories\{{ entity_name }}Factory> */
+    use HasFactory;
+}

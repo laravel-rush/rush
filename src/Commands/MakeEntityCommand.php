@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LaravelRush\Rush\Commands;
 
 use Illuminate\Console\Command;
-use LaravelRush\Rush\Actions\CreateMigration;
+use LaravelRush\Rush\Actions\CreateEntity;
 
 final class MakeEntityCommand extends Command
 {
@@ -19,7 +19,7 @@ final class MakeEntityCommand extends Command
      */
     protected $description = 'Create entity';
 
-    public function handle(CreateMigration $action): int
+    public function handle(CreateEntity $action): int
     {
         /** @var string $entity_name */
         $entity_name = $this->argument('name');

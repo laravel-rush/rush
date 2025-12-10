@@ -34,4 +34,16 @@ final readonly class TwigService
             'properties' => $properties,
         ]);
     }
+
+    /**
+     * @param  array<int, array{name: string, type: string}>  $properties
+     */
+    public function renderModel(string $entity_name, array $properties): string
+    {
+        return $this->twig->render('/model/model.twig', [
+            'entity_name' => $entity_name,
+            'types' => config('_internal.types.types'),
+            'properties' => $properties,
+        ]);
+    }
 }
