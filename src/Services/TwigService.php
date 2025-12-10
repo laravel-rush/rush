@@ -25,7 +25,7 @@ final readonly class TwigService
     }
 
     /**
-     * @param  array{name: string, type: string}  $properties
+     * @param  array<int, array{name: string, type: string}>  $properties
      */
     public function renderMigration(string $table_name, array $properties): string
     {

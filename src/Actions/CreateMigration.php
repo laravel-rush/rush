@@ -14,7 +14,7 @@ final readonly class CreateMigration
     ) {}
 
     /**
-     * @param  array{name: string, type: string}  $properties
+     * @param  array<int, array{name: string, type: string}>  $properties
      */
     public function handle(string $entity_name, array $properties): void
     {

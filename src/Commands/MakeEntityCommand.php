@@ -26,9 +26,10 @@ final class MakeEntityCommand extends Command
         $properties = [];
 
         /** @var string[] $types */
-        $types = config()->array('_internal.types');
+        $types = config()->array('_internal.types.titles');
 
         while (true) {
+            /** @var ?string $property_name */
             $property_name = $this->ask('New property name (press <return> to stop adding fields)');
 
             if ($property_name === null) {
