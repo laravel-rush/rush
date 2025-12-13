@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LaravelRush\Rush\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 use LaravelRush\Rush\Actions\CreateEntity;
 
 final class MakeEntityCommand extends Command
@@ -23,6 +24,27 @@ final class MakeEntityCommand extends Command
     {
         /** @var string $entity_name */
         $entity_name = $this->argument('name');
+
+        $model = app_path('Models/').$entity_name.'.php';
+
+        if (! File::exists($model)) {
+            $properties = $this->askUser();
+
+            $action->handle($entity_name, $properties);
+
+            return 0;
+        }
+
+        $this->error('file already exists');
+
+        return 1;
+    }
+
+    /**
+     * @return array<int, array{name: string, type: string}>
+     */
+    private function askUser(): array
+    {
         $properties = [];
 
         /** @var string[] $types */
@@ -54,8 +76,6 @@ final class MakeEntityCommand extends Command
             ];
         }
 
-        $action->handle($entity_name, $properties);
-
-        return 0;
+        return $properties;
     }
 }

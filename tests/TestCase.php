@@ -37,14 +37,18 @@ class TestCase extends TestbenchTestCase
     private function configurePaths(): void
     {
         $migrations_path = database_path('migrations');
+        $models_path = app_path('Models');
 
         File::makeDirectory($migrations_path, 0755, true);
+        File::makeDirectory($models_path, 0755, true);
     }
 
     private function clearPaths(): void
     {
         $migrations_path = database_path();
+        $models_path = app_path('Models');
 
         File::deleteDirectory($migrations_path);
+        File::deleteDirectory($models_path);
     }
 }
