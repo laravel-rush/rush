@@ -7,6 +7,7 @@ namespace LaravelRush\Rush\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use LaravelRush\Rush\Actions\CreateEntity;
+use LaravelRush\Rush\Actions\EditEntity;
 
 final class MakeEntityCommand extends Command
 {
@@ -20,7 +21,7 @@ final class MakeEntityCommand extends Command
      */
     protected $description = 'Create entity';
 
-    public function handle(CreateEntity $action): int
+    public function handle(CreateEntity $createEntity, EditEntity $editEntity): int
     {
         /** @var string $entity_name */
         $entity_name = $this->argument('name');
@@ -30,14 +31,18 @@ final class MakeEntityCommand extends Command
         if (! File::exists($model)) {
             $properties = $this->askUser();
 
-            $action->handle($entity_name, $properties);
+            $createEntity->handle($entity_name, $properties);
 
             return 0;
         }
+        $this->info("Your entity already exists! So let's add some new fields!");
 
-        $this->error('file already exists');
+        $properties = $this->askUser();
+
+        $editEntity->handle($entity_name, $properties);
 
         return 1;
+
     }
 
     /**

@@ -38,6 +38,17 @@ final readonly class TwigService
     /**
      * @param  array<int, array{name: string, type: string}>  $properties
      */
+    public function updateMigration(string $table_name, array $properties): string
+    {
+        return $this->twig->render('/migration/update-migration.twig', [
+            'table_name' => $table_name,
+            'properties' => $properties,
+        ]);
+    }
+
+    /**
+     * @param  array<int, array{name: string, type: string}>  $properties
+     */
     public function renderModel(string $entity_name, array $properties): string
     {
         return $this->twig->render('/model/model.twig', [
